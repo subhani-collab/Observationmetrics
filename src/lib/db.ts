@@ -87,7 +87,7 @@ function migrate(db: Database.Database) {
   `);
 }
 
-async function seedAdmin(db: Database.Database) {
+function seedAdmin(db: Database.Database) {
   const count = (db.prepare('SELECT COUNT(*) as c FROM users').get() as { c: number }).c;
   if (count > 0) return;
 
@@ -97,7 +97,7 @@ async function seedAdmin(db: Database.Database) {
 
   if (!email || !password) return;
 
-  const hash = await bcrypt.hash(password, 12);
+  const hash = bcrypt.hashSync(password, 12);
   db.prepare('INSERT INTO users (id, email, name, password_hash, role) VALUES (?, ?, ?, ?, ?)').run(
     uuidv4(), email.toLowerCase().trim(), name, hash, 'admin'
   );
