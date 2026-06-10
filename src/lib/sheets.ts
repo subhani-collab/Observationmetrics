@@ -7,10 +7,16 @@ const SHEET_ID = process.env.GOOGLE_SHEET_ID!;
 const SHEET_GID = process.env.GOOGLE_SHEET_GID;
 
 function getAuth() {
+  const rawKey = process.env.GOOGLE_PRIVATE_KEY || '';
+  // Handle both literal \n strings and actual newlines
+  const privateKey = rawKey.includes('\\n')
+    ? rawKey.replace(/\\n/g, '\n')
+    : rawKey;
+
   return new google.auth.GoogleAuth({
     credentials: {
       client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-      private_key: process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+      private_key: privateKey,
     },
     scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly'],
   });
