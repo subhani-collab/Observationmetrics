@@ -1,4 +1,10 @@
 node_modules
 dist
 .env
+.env.local
 *.local
+.next
+data/
+*.db
+*.db-shm
+*.db-wal

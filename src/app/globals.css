@@ -1,0 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@layer base {
+  * {
+    @apply border-slate-800;
+  }
+
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    @apply bg-slate-950 text-slate-200 antialiased;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  /* Light mode overrides */
+  .light body {
+    @apply bg-gray-50 text-gray-900;
+    color-scheme: light;
+  }
+
+  ::-webkit-scrollbar {
+    @apply w-1.5 h-1.5;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-slate-700 rounded-full;
+  }
+
+  /* Light mode component adjustments */
+  .light .bg-slate-950  { background-color: #f8fafc; }
+  .light .bg-slate-900  { background-color: #ffffff; }
+  .light .bg-slate-800  { background-color: #f1f5f9; }
+  .light .border-slate-800 { border-color: #e2e8f0; }
+  .light .text-slate-200 { color: #1e293b; }
+  .light .text-slate-300 { color: #334155; }
+  .light .text-slate-400 { color: #64748b; }
+  .light .text-slate-500 { color: #94a3b8; }
+  .light .text-slate-600 { color: #94a3b8; }
+}
+
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}

@@ -1,1 +1,0 @@
-{"root":["./src/App.tsx","./src/main.tsx","./src/components/ErrorList.tsx","./src/components/ErrorRateChart.tsx","./src/components/LatencyChart.tsx","./src/components/ServiceTable.tsx","./src/components/StatCard.tsx","./src/components/ThroughputChart.tsx","./src/components/TimeRangePicker.tsx","./src/data/mockMetrics.ts","./src/utils/format.ts"],"version":"5.8.3"}
