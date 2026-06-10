@@ -6,7 +6,7 @@
 
 require('dotenv').config({ path: '.env.local' });
 
-const { DatabaseSync } = require('node:sqlite');
+const Database = require('better-sqlite3');
 const bcrypt = require('bcryptjs');
 const { v4: uuidv4 } = require('uuid');
 const path = require('path');
@@ -25,8 +25,8 @@ if (!email || !password) {
   process.exit(1);
 }
 
-const db = new DatabaseSync(DB_PATH);
-db.exec('PRAGMA journal_mode = WAL');
+const db = new Database(DB_PATH);
+db.pragma('journal_mode = WAL');
 
 db.exec(`
   CREATE TABLE IF NOT EXISTS users (
