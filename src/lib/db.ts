@@ -93,15 +93,12 @@ function seedAdmin(db: DatabaseSync) {
   const name = process.env.INITIAL_ADMIN_NAME || 'Admin';
 
   const existing = db.prepare('SELECT id FROM users WHERE email = ?').get(email) as { id: string } | undefined;
-  const hash = bcrypt.hashSync(password, 12);
+  if (existing) return;
 
-  if (existing) {
-    db.prepare('UPDATE users SET password_hash = ?, name = ? WHERE email = ?').run(hash, name, email);
-  } else {
-    db.prepare('INSERT INTO users (id, email, name, password_hash, role) VALUES (?, ?, ?, ?, ?)').run(
-      uuidv4(), email, name, hash, 'admin'
-    );
-  }
+  const hash = bcrypt.hashSync(password, 12);
+  db.prepare('INSERT INTO users (id, email, name, password_hash, role) VALUES (?, ?, ?, ?, ?)').run(
+    uuidv4(), email, name, hash, 'admin'
+  );
 }
 
 // ── Employee queries ──────────────────────────────────────────────────────────
