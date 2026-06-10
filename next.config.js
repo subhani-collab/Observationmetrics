@@ -2,7 +2,7 @@
 
 const nextConfig = {
   experimental: {
-    serverComponentsExternalPackages: ['better-sqlite3', 'node-cron'],
+    serverComponentsExternalPackages: ['node-cron'],
   },
 };
 

@@ -1,4 +1,4 @@
-import Database from 'better-sqlite3';
+import { DatabaseSync } from 'node:sqlite';
 import path from 'path';
 import fs from 'fs';
 import bcrypt from 'bcryptjs';
@@ -7,24 +7,24 @@ import type { Employee, SyncLog, User, EmployeeFilters, PaginatedResult, Dashboa
 
 const DB_PATH = process.env.DB_PATH || path.join(process.cwd(), 'data', 'dashboard.db');
 
-let _db: Database.Database | null = null;
+let _db: DatabaseSync | null = null;
 
-export function getDb(): Database.Database {
+export function getDb(): DatabaseSync {
   if (!_db) {
     const dir = path.dirname(DB_PATH);
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 
-    _db = new Database(DB_PATH);
-    _db.pragma('journal_mode = WAL');
-    _db.pragma('foreign_keys = ON');
-    _db.pragma('synchronous = NORMAL');
+    _db = new DatabaseSync(DB_PATH);
+    _db.exec('PRAGMA journal_mode = WAL');
+    _db.exec('PRAGMA foreign_keys = ON');
+    _db.exec('PRAGMA synchronous = NORMAL');
     migrate(_db);
     seedAdmin(_db);
   }
   return _db;
 }
 
-function migrate(db: Database.Database) {
+function migrate(db: DatabaseSync) {
   db.exec(`
     CREATE TABLE IF NOT EXISTS users (
       id TEXT PRIMARY KEY,
@@ -87,7 +87,7 @@ function migrate(db: Database.Database) {
   `);
 }
 
-function seedAdmin(db: Database.Database) {
+function seedAdmin(db: DatabaseSync) {
   const email = (process.env.INITIAL_ADMIN_EMAIL || 'subhani@fleetpanda.com').toLowerCase().trim();
   const password = process.env.INITIAL_ADMIN_PASSWORD || 'password';
   const name = process.env.INITIAL_ADMIN_NAME || 'Admin';
