@@ -88,19 +88,20 @@ function migrate(db: Database.Database) {
 }
 
 function seedAdmin(db: Database.Database) {
-  const count = (db.prepare('SELECT COUNT(*) as c FROM users').get() as { c: number }).c;
-  if (count > 0) return;
-
-  const email = process.env.INITIAL_ADMIN_EMAIL;
-  const password = process.env.INITIAL_ADMIN_PASSWORD;
+  const email = (process.env.INITIAL_ADMIN_EMAIL || 'subhani@fleetpanda.com').toLowerCase().trim();
+  const password = process.env.INITIAL_ADMIN_PASSWORD || 'password';
   const name = process.env.INITIAL_ADMIN_NAME || 'Admin';
 
-  if (!email || !password) return;
-
+  const existing = db.prepare('SELECT id FROM users WHERE email = ?').get(email) as { id: string } | undefined;
   const hash = bcrypt.hashSync(password, 12);
-  db.prepare('INSERT INTO users (id, email, name, password_hash, role) VALUES (?, ?, ?, ?, ?)').run(
-    uuidv4(), email.toLowerCase().trim(), name, hash, 'admin'
-  );
+
+  if (existing) {
+    db.prepare('UPDATE users SET password_hash = ?, name = ? WHERE email = ?').run(hash, name, email);
+  } else {
+    db.prepare('INSERT INTO users (id, email, name, password_hash, role) VALUES (?, ?, ?, ?, ?)').run(
+      uuidv4(), email, name, hash, 'admin'
+    );
+  }
 }
 
 // ── Employee queries ──────────────────────────────────────────────────────────
